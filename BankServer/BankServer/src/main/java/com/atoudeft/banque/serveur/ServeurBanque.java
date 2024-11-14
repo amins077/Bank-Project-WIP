@@ -97,8 +97,6 @@ public class ServeurBanque extends Serveur {
             if (tempsActuel - tempsDerniereOperation > DELAI_INACTIVITE) {
                 //Envoyer "END" au client
                 connexion.envoyer("END");
-                //Fermer la connexion
-                //client.deconnecter();
                 //Enlever la connection de la liste des connectés
                 iterator.remove();
             }
