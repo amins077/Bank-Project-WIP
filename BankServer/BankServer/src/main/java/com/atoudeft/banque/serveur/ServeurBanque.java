@@ -91,15 +91,15 @@ public class ServeurBanque extends Serveur {
         Iterator<Connexion> iterator = connectes.iterator();
 
         while (iterator.hasNext()) {
-            Connexion connexion = iterator.next();
+            ConnexionBanque connexion = (ConnexionBanque) iterator.next();
             // Vérification de l'écart de temps entre la dernière opération et l'heure actuelle
             long tempsDerniereOperation = connexion.getTempsDerniereOperation();
             if (tempsActuel - tempsDerniereOperation > DELAI_INACTIVITE) {
                 //Envoyer "END" au client
-                connexion.sendToClient("END");
+                connexion.envoyer("END");
                 //Fermer la connexion
-                client.deconnecter();
-                //Enelever la connection de la liste des connectés
+                //client.deconnecter();
+                //Enlever la connection de la liste des connectés
                 iterator.remove();
             }
         }
