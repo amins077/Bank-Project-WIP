@@ -6,6 +6,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.net.Socket;
 
+import static com.atoudeft.banque.serveur.ServeurBanque.DELAI_INACTIVITE;
+
 public class ConnexionBanque extends Connexion {
     private String numeroCompteClient;
     private long tempsDerniereOperation;
@@ -30,11 +32,11 @@ public class ConnexionBanque extends Connexion {
      */
     public boolean estInactifDepuis(long delai) {
         //À définir :
-        //throw new NotImplementedException();//ligne à supprimer
-        delai = 30;
-        // Méthode qui vérifie si la connexion est inactive depuis un délai donné
+        /*throw new NotImplementedException(); ligne à supprimer*/
+        delai = DELAI_INACTIVITE;
+        // Méthode qui vérifie si la connexion est inactive depuis un délai donné (30s)
         long tempsActuel = System.currentTimeMillis();
-        return (tempsActuel - tempsDerniereOperation) >= delai;
+        return (tempsActuel - tempsDerniereOperation) >= DELAI_INACTIVITE;
     }
 
     /**

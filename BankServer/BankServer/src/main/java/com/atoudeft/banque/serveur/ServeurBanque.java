@@ -85,5 +85,6 @@ public class ServeurBanque extends Serveur {
      */
     public void supprimeInactifs() {
         //À définir :
+
     }
 }
