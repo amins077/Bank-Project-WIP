@@ -80,6 +80,49 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             cnx.envoyer("NOUVEAU NO "+t[0]+" existe");
                     }
                     break;
+
+                case "CONNECT":
+                    // Vérification que le client n'est pas déjà connecté
+                    if (cnx.getNumeroCompteClient() != null) {
+                        cnx.envoyer("CONNECT NO deja connecte");
+                        break;
+                    }
+
+                    // Récupération du numéro de compte-client et du NIP
+                    argument = evenement.getArgument();
+                    t = argument.split(":");
+                    if (t.length < 2) {
+                        // Si les informations ne sont pas bien formatées, envoyer une réponse d'erreur
+                        cnx.envoyer("CONNECT NO format incorrect");
+                        break;
+                    }
+
+                    numCompteClient = t[0];
+                    nip = t[1];
+                    banque = serveurBanque.getBanque();
+
+                    // Vérification si un autre client est déjà connecté avec ce compte
+                    if (serveurBanque.estCompteConnecte(numCompteClient)) {
+                        cnx.envoyer("CONNECT NO deja utilise");
+                        break;
+                    }
+
+                    // Récupération du compte-client dans la banque et vérification du NIP
+                    if (!banque.verifierNip(numCompteClient, nip)) {
+                        // Si le compte n'existe pas ou que le NIP est incorrect
+                        cnx.envoyer("CONNECT NO compte ou nip incorrect");
+                        break;
+                    }
+
+                    // Enregistrement du compte-client et du compte chèque par défaut
+                    cnx.setNumeroCompteClient(numCompteClient);
+                    cnx.setNumeroCompteActuel(banque.getNumeroCompteParDefaut(numCompteClient));
+
+                    // Envoi de la réponse de succès
+                    cnx.envoyer("CONNECT OK");
+                    break;
+
+
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();
