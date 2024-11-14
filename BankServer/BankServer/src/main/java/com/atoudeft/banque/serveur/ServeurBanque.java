@@ -85,6 +85,6 @@ public class ServeurBanque extends Serveur {
      */
     public void supprimeInactifs() {
         //À définir :
-
+        System.out.println("END");
     }
 }
