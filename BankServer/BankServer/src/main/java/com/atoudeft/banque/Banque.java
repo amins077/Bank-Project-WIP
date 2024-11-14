@@ -107,7 +107,42 @@ public class Banque implements Serializable {
                 . Créer un compte-chèque avec ce numéro et l'ajouter au compte-client;
                 . Ajouter le compte-client à la liste des comptes et retourner true.
          */
-        return this.comptes.add(new CompteClient(numCompteClient,nip)); //À modifier
+
+        // Vérifier si le numéro de compte client est valide (6-8 caractères, lettres majuscules et chiffres)
+
+        if (numCompteClient == null || numCompteClient.length() < 6 || numCompteClient.length() > 8) {
+            return false;
+        }
+
+        if (!numCompteClient.matches("[A-Z0-9]+")) {
+            return false;
+        }
+        //return this.comptes.add(new CompteClient(numCompteClient,nip)); //À modifier
+        if (nip == null || nip.length() < 4 || nip.length() > 5) {
+            return false;
+        }
+
+        if (!nip.matches("\\d{4,5}")) {
+            return false;
+        }
+        if (comptes.equals(numCompteClient)) {
+            return false;
+        }
+
+        CompteClient compteClient = new CompteClient(numCompteClient, nip);
+
+        String numCompteBancaire = CompteBancaire.genereNouveauNumero();
+        while (compteBabcaireExiste(numCompteBancaire)) {
+            numCompteBancaire = CompteBancaire.genereNouveauNumero();
+        }
+
+        CompteBancaire compteCheque = new CompteBancaire(numCompteBancaire);
+        compteClient.ajouterCompteBancaire(compteCheque);
+
+        comptes.add(compteClient);
+
+        return true;
+        }
     }
 
     /**
