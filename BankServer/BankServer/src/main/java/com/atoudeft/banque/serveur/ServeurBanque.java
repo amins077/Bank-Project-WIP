@@ -5,6 +5,7 @@ import com.atoudeft.banque.io.EntreesSorties;
 import com.atoudeft.commun.net.Connexion;
 import com.atoudeft.serveur.Serveur;
 
+import java.util.Iterator;
 import java.util.ListIterator;
 /**
  * Cette classe étend (hérite) la classe Serveur et y ajoute le nécessaire pour que le
@@ -15,7 +16,7 @@ import java.util.ListIterator;
  * @since 2024-08-20
  */
 public class ServeurBanque extends Serveur {
-    public static final int DELAI_INACTIVITE = 30000;
+    public static final int DELAI_INACTIVITE = 5000/*30000*/;
     //Référence vers la banque gérée par ce serveur :
     private Banque banque;
     //Thread qui supprime les connexions inactives :
@@ -85,6 +86,22 @@ public class ServeurBanque extends Serveur {
      */
     public void supprimeInactifs() {
         //À définir :
-        System.out.println("END");
+        long tempsActuel = System.currentTimeMillis();
+        // Utilisation d'un itérateur pour parcourir et modifier la liste
+        Iterator<Connexion> iterator = connectes.iterator();
+
+        while (iterator.hasNext()) {
+            Connexion connexion = iterator.next();
+            // Vérification de l'écart de temps entre la dernière opération et l'heure actuelle
+            long tempsDerniereOperation = connexion.getTempsDerniereOperation();
+            if (tempsActuel - tempsDerniereOperation > DELAI_INACTIVITE) {
+                //Envoyer "END" au client
+                connexion.sendToClient("END");
+                //Fermer la connexion
+                client.deconnecter();
+                //Enelever la connection de la liste des connectés
+                iterator.remove();
+            }
+        }
     }
 }
