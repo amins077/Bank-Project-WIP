@@ -37,6 +37,5 @@ public class ProgrammeServeurTP1 {
             saisie = clavier.nextLine();
         }
         serveur.arreter();
-
         }
     }
