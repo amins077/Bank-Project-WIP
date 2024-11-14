@@ -1,5 +1,7 @@
 package com.atoudeft.commun.evenement;
 
+import com.atoudeft.client.Client;
+
 /**
  * Cette interface représente un gestionnaire d'événement.
  *
@@ -15,12 +17,13 @@ public interface GestionnaireEvenement {
 	* @param evenement L'événement à gérer.
 	*/
 	void traiter(Evenement evenement);
-	switch (typeEvenement) {
-		case "END" :
+	Client client;
+	switch (Evenement) {
+		case "END":
 			client.deconnecter();
 			break;
-		case "LIST" :
-			arg = evenement.getArgument();
+		case "LIST":
+			String arg = evenement.getArgument();
 			membres = arg.split(":");
 			System.out.println("\t\t"+membres.length+" personnes dans le salon :");
 			for (String s:membres)
