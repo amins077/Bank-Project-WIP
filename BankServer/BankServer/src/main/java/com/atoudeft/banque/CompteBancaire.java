@@ -34,6 +34,7 @@ public abstract class CompteBancaire implements Serializable {
         this.type = type;
         this.solde = 0;
     }
+
     public String getNumero() {
         return numero;
     }

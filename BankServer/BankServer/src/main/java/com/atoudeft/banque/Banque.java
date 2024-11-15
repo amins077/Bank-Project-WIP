@@ -1,4 +1,4 @@
-package com.atoudeft.banque;
+package com.atoudeft.banque.;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -110,40 +110,38 @@ public class Banque implements Serializable {
 
         // Vérifier si le numéro de compte client est valide (6-8 caractères, lettres majuscules et chiffres)
 
-        if (numCompteClient == null || numCompteClient.length() < 6 || numCompteClient.length() > 8) {
+        //return this.comptes.add(new CompteClient(numCompteClient,nip)); //À modifier**
+
+        if (numCompteClient.length() < 6 || numCompteClient.length() > 8 || !numCompteClient.matches("[A-Z0-9]+")) {
             return false;
         }
 
-        if (!numCompteClient.matches("[A-Z0-9]+")) {
-            return false;
-        }
-        //return this.comptes.add(new CompteClient(numCompteClient,nip)); //À modifier
-        if (nip == null || nip.length() < 4 || nip.length() > 5) {
+        if (nip.length() < 4 || nip.length() > 5 || !nip.matches("[0-9]+")) {
             return false;
         }
 
-        if (!nip.matches("\\d{4,5}")) {
-            return false;
-        }
         if (comptes.equals(numCompteClient)) {
             return false;
         }
 
+        //creation nouveau compte client
         CompteClient compteClient = new CompteClient(numCompteClient, nip);
 
+        //Generation numero compte bancaire
         String numCompteBancaire = CompteBancaire.genereNouveauNumero();
         while (compteBancaireExiste(numCompteBancaire)) {
             numCompteBancaire = CompteBancaire.genereNouveauNumero();
         }
 
+        //creation compte cheque au client client
         CompteBancaire compteCheque = new CompteBancaire(numCompteBancaire);
-        compteClient.ajouterCompteBancaire(compteCheque);
+        compteClient.ajouter(compteCheque);
 
         comptes.add(compteClient);
 
         return true;
-        }
     }
+
 
     /**
      * Retourne le numéro du compte-chèque d'un client à partir de son numéro de compte-client.
