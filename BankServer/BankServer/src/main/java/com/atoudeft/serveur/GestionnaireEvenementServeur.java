@@ -233,7 +233,25 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             System.out.println("Montant invalide: " + t[1]);
                         }
                     } else {
-                        System.out.println("Format de commande incorrecte. Utilisation: FACTURE montant, numéro de facture, description.");
+                        System.out.println("Format de commande incorrecte. Utilisation: FACTURE montant  numéro de facture description.");
+                    }
+                    break;
+
+                    // 6.4 - TRANSFER
+
+                case "TRANSFER":
+                    if(t.length == 3){
+                        try {
+                            double montant = Double.parseDouble(t[1]);
+                            String numCompteDestinataire = t[2];
+                            //Appel de la méthode pour transférer l'argent
+                            transfererArgent();
+                            System.out.println("Votre transfert de " + montant + " unités vers le compte " + numCompteDestinataire + " a été effectué.");
+                        } catch (NumberFormatException e) {
+                            System.out.println("Montant invalide: " + t[1]);
+                        }
+                    } else {
+                        System.out.println(" Format de commande incorrecte. Utilisation : TRANSFER montant numéro-compte");
                     }
                     break;
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
