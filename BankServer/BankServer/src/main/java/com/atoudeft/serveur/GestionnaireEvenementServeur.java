@@ -9,6 +9,7 @@ import com.atoudeft.banque.serveur.ServeurBanque;
 import com.atoudeft.commun.evenement.Evenement;
 import com.atoudeft.commun.evenement.GestionnaireEvenement;
 import com.atoudeft.commun.net.Connexion;
+import com.sun.deploy.util.SyncAccess;
 
 /**
  * Cette classe représente un gestionnaire d'événement d'un serveur. Lorsqu'un serveur reçoit un texte d'un client,
@@ -159,6 +160,21 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     cnx.envoyer("EPARGNE OK " + nouveauNumeroCompte);
                     break;
 
+                //6.1 - CASE DEPOT
+
+                case "DEPOT":
+                    if(t.length == 2) {
+                        try {
+                            double montant = Double.parseDouble(t[1]);
+                            crediterCompte(montant);
+                            System.out.println("Votre compte à été crédité de " + montant + " unités.");
+                        } catch (NumberFormatException e) {
+                            System.out.println("Montant invalide: " + t[1]);
+                        }
+                    } else {
+                        System.out.println("Format de commande incorrecte: Utilisation: DEPOT montant.");
+                    }
+                    break;
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();

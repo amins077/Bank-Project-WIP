@@ -93,6 +93,7 @@ public class Banque implements Serializable {
      * @param nip nip du compte-client à créer
      * @return true si le compte a été créé correctement
      */
+
     public boolean ajouter(String numCompteClient, String nip) {
         /*À compléter et modifier :
             - Vérifier que le numéro a entre 6 et 8 caractères et ne contient que des lettres majuscules et des chiffres.
