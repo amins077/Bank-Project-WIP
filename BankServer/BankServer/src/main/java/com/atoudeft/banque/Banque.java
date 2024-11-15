@@ -132,7 +132,7 @@ public class Banque implements Serializable {
         CompteClient compteClient = new CompteClient(numCompteClient, nip);
 
         String numCompteBancaire = CompteBancaire.genereNouveauNumero();
-        while (compteBabcaireExiste(numCompteBancaire)) {
+        while (compteBancaireExiste(numCompteBancaire)) {
             numCompteBancaire = CompteBancaire.genereNouveauNumero();
         }
 

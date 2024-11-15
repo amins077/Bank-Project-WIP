@@ -1,6 +1,9 @@
 package com.atoudeft.serveur;
 
 import com.atoudeft.banque.Banque;
+import com.atoudeft.banque.CompteBancaire;
+import com.atoudeft.banque.CompteEpargne;
+import com.atoudeft.banque.TypeCompte;
 import com.atoudeft.banque.serveur.ConnexionBanque;
 import com.atoudeft.banque.serveur.ServeurBanque;
 import com.atoudeft.commun.evenement.Evenement;
@@ -82,7 +85,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     break;
 
                 case "CONNECT":
-                    // Vérification que le client n'est pas déjà connecté
+                    // Vérification si client n'est pas connecté
                     if (cnx.getNumeroCompteClient() != null) {
                         cnx.envoyer("CONNECT NO deja connecte");
                         break;
@@ -122,6 +125,39 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     cnx.envoyer("CONNECT OK");
                     break;
 
+                case "EPARGNE":
+                    //verifier si compte deja connecter
+                    if (cnx.getNumeroCompteClient() != null) {
+                        cnx.envoyer("EPARGNE NO");
+                        break;
+                    }
+
+                    banque = serveurBanque.getBanque();
+
+                    //Verifier si client possede compte Epargne
+                    if(banque.clientPossedeCompteEpargne(cnx.getNumeroCompteClient())) {
+                        cnx.envoyer("EPARGNE NO");
+                    }
+
+                    //genere numero de compte Epargne
+                    String nouveauNumeroCompte;
+                    do {
+                        nouveauNumeroCompte = CompteBancaire.genereNouveauNumero();
+                    } while (banque.numeroCompteExistant(nouveauNumeroCompte));
+
+
+                    //creer compte epargne
+                    CompteEpargne nouveauCompte = new CompteEpargne(
+                            cnx.getNumeroCompteClient(),
+                            TypeCompte.EPARGNE,
+                            5.0
+                    );
+                    nouveauCompte.setNumeroCompte(nouveauNumeroCompte);
+
+                    banque.ajouterCompte(cnx.getNumeroCompteClient(), nouveauCompte);
+
+                    cnx.envoyer("EPARGNE OK " + nouveauNumeroCompte);
+                    break;
 
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
