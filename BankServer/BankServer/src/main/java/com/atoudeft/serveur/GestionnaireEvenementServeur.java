@@ -216,6 +216,25 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         System.out.println("Format de commande incorrecte: Utilisation: RETRAIT montant.");
                     }
                     break;
+
+                    //6.3 - FACTURE
+
+                case "FACTURE":
+                    if(t.length == 4) {
+                        try {
+                            double montant = Double.parseDouble(t[1]);
+                            String numFacture = t[2];
+                            String description = t[3];
+                            //Appel de la méthode payerFacture
+                            payerFacture(montant, numFacture, description);
+                            System.out.println("Votre facture " + numFacture + " a été payée de " + montant + " unités.");
+                        } catch (NumberFormatException e) {
+                            System.out.println("Montant invalide: " + t[1]);
+                        }
+                    } else {
+                        System.out.println("Format de commande incorrecte. Utilisation: FACTURE montant, numéro de facture, description.");
+                    }
+                    break;
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();
