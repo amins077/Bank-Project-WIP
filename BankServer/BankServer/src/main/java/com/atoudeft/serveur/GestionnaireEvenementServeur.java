@@ -160,7 +160,32 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     cnx.envoyer("EPARGNE OK " + nouveauNumeroCompte);
                     break;
 
-                //6.1 - CASE DEPOT
+                    //6.0 - SELECT
+
+                case "SELECT":
+                    // Vérification si client n'est pas deja connecté
+                    if (cnx.getNumeroCompteClient() == null) {
+                        cnx.envoyer("CONNECT NO deja connecte");
+                        break;
+                    }
+
+                    argument = evenement.getArgument();
+
+                    banque = serveurBanque.getBanque();
+                    if (argument.equals("cheque")){
+                        cnx.setNumeroCompteActuel(banque.getNumeroCompteParDefaut(cnx.getNumeroCompteClient()));
+                    } else if (argument.equals("epargne")) {
+                        cnx.setNumeroCompteActuel(banque.getNumeroCompteEpargne(cnx.getNumeroCompteClient()));
+                    }
+                    else {
+                        cnx.envoyer("SELECT NO");
+                        break;
+                    }
+
+                    cnx.envoyer("SELECT OK");
+                    break;
+
+                    //6.1 - CASE DEPOT
 
                 case "DEPOT":
                     if(t.length == 2) {
@@ -175,12 +200,8 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         System.out.println("Format de commande incorrecte: Utilisation: DEPOT montant.");
                     }
                     break;
-                /******************* TRAITEMENT PAR DÉFAUT *******************/
-                default: //Renvoyer le texte recu convertit en majuscules :
-                    msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();
-                    cnx.envoyer(msg);
 
-                //6.2 - RETRAIT
+                    // 6.2 - RETRAIT
 
                 case "RETRAIT":
                     if(t.length == 2) {
@@ -195,6 +216,10 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         System.out.println("Format de commande incorrecte: Utilisation: RETRAIT montant.");
                     }
                     break;
+                /******************* TRAITEMENT PAR DÉFAUT *******************/
+                default: //Renvoyer le texte recu convertit en majuscules :
+                    msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();
+                    cnx.envoyer(msg);
             }
         }
     }
