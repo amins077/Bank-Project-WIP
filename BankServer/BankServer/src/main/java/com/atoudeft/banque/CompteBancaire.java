@@ -1,6 +1,7 @@
 package com.atoudeft.banque;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public abstract class CompteBancaire implements Serializable {
     private String numero;
@@ -51,5 +52,33 @@ public abstract class CompteBancaire implements Serializable {
 
     protected void setSolde(double nouveauSolde) {
         this.solde = nouveauSolde;
+    }
+
+    //7.1
+
+    enum TypeOperation {
+        DEPOT,
+        RETRAIT,
+        TRANSFER,
+        FACTURE
+    }
+    abstract class Operation {
+        private TypeOperation type;
+        private Date dateOperation;
+
+        //Constructeur pour initialiser le type et la date de l'opération
+        public Operation(TypeOperation type) {
+            this.type = type;
+            this.dateOperation = new Date(System.currentTimeMillis());
+        }
+        //Getter pour le type de l'opération
+        public TypeOperation getType() {
+            return type;
+        }
+        //Getter pour la date de l'opération
+        public Date getDateOperation() {
+            return dateOperation;
+        }
+        public abstract  void executer();
     }
 }
