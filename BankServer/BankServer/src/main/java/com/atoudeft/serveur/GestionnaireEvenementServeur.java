@@ -2,6 +2,7 @@ package com.atoudeft.serveur;
 
 import com.atoudeft.banque.Banque;
 import com.atoudeft.banque.CompteBancaire;
+import com.atoudeft.banque.CompteCheque;
 import com.atoudeft.banque.CompteEpargne;
 import com.atoudeft.banque.TypeCompte;
 import com.atoudeft.banque.serveur.ConnexionBanque;
@@ -226,7 +227,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             String numFacture = t[2];
                             String description = t[3];
                             //Appel de la méthode payerFacture
-                            payerFacture(montant, numFacture, description);
+                            payerFacture();
                             System.out.println("Votre facture " + numFacture + " a été payée de " + montant + " unités.");
                         } catch (NumberFormatException e) {
                             System.out.println("Montant invalide: " + t[1]);

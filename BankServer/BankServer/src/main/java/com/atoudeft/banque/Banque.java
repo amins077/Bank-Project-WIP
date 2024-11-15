@@ -83,7 +83,8 @@ public class Banque implements Serializable {
      * @return true si le paiement s'est bien effectuée
      */
     public boolean payerFacture(double montant, String numeroCompte, String numeroFacture, String description) {
-        throw new NotImplementedException();
+    //    throw new NotImplementedException();
+
     }
 
     /**
