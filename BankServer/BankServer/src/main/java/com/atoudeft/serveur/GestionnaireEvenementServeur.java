@@ -179,6 +179,22 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();
                     cnx.envoyer(msg);
+
+                //6.2 - RETRAIT
+
+                case "RETRAIT":
+                    if(t.length == 2) {
+                        try {
+                            double montant = Double.parseDouble(t[1]);
+                            debiterCompte(montant);
+                            System.out.println("Votre compte à été débité de " + montant + " unités.");
+                        } catch (NumberFormatException e) {
+                            System.out.println("Montant invalide: " + t[1]);
+                        }
+                    } else {
+                        System.out.println("Format de commande incorrecte: Utilisation: RETRAIT montant.");
+                    }
+                    break;
             }
         }
     }
