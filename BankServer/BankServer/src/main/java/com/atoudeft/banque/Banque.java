@@ -1,4 +1,4 @@
-package com.atoudeft.banque.;
+package com.atoudeft.banque;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
