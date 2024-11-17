@@ -3,6 +3,7 @@ package com.atoudeft.banque;
 import com.sun.org.apache.xpath.internal.operations.Operation;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public abstract class CompteBancaire implements Serializable {
@@ -117,6 +118,14 @@ public abstract class CompteBancaire implements Serializable {
             //Logique pour éxecuter l'opération de dépot
             System.out.println("Dépôt de " + montant + " unités.");
         }
+
+        //7.3
+        @Override
+        public String toString() {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateStr = sdf.format(getDateOperation());
+            return "DATE: " + dateStr + "\nTYPE: " + getType() + "\nMONTANT: " + montant;
+        }
     }
 
     public class OperationRetrait extends Operation {
@@ -137,6 +146,14 @@ public abstract class CompteBancaire implements Serializable {
             //Logique pour éxecuter l'opération de retrait
             System.out.println("Retrait de " + montant + " unités.");
         }
+
+        //7.3
+        @Override
+        public String toString() {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateStr = sdf.format(getDateOperation());
+            return "DATE: " + dateStr + "\nTYPE: " + getType() + "\nMONTANT: " + montant;
+        }
     }
 
     public class OperationTransfer extends Operation {
@@ -156,6 +173,14 @@ public abstract class CompteBancaire implements Serializable {
         public void executer() {
             //Logique pour éxecuter l'opération de transfer.
             System.out.println("Transfer de " + montant + " unités");
+        }
+
+        //7.3
+        @Override
+        public String toString() {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateStr = sdf.format(getDateOperation());
+            return "DATE: " + dateStr + "\nTYPE: " + getType() + "\nMONTANT: " + montant;
         }
     }
 
@@ -188,6 +213,14 @@ public abstract class CompteBancaire implements Serializable {
         public void executer() {
             //Logique pour éxecuter l'opération de facture.
             System.out.println("Paiement de la facture " + numeroFacture + " de " + montant + " unités pour " + description + ".");
+        }
+
+        //7.3
+        @Override
+        public String toString() {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateStr = sdf.format(getDateOperation());
+            return "DATE: " + dateStr + "\nTYPE: " + getType() + "\nMONTANT: " + montant + "\nNUMÉRO DE FACTURE: " + numeroFacture + "\nDESCRIPTION: " + description;
         }
     }
 }
