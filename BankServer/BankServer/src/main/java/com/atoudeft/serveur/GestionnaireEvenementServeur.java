@@ -1,10 +1,6 @@
 package com.atoudeft.serveur;
 
-import com.atoudeft.banque.Banque;
-import com.atoudeft.banque.CompteBancaire;
-import com.atoudeft.banque.CompteCheque;
-import com.atoudeft.banque.CompteEpargne;
-import com.atoudeft.banque.TypeCompte;
+import com.atoudeft.banque.*;
 import com.atoudeft.banque.serveur.ConnexionBanque;
 import com.atoudeft.banque.serveur.ServeurBanque;
 import com.atoudeft.commun.evenement.Evenement;
@@ -41,10 +37,11 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
     public void traiter(Evenement evenement) {
         Object source = evenement.getSource();
         ServeurBanque serveurBanque = (ServeurBanque)serveur;
-        Banque banque;
+        Banque banque = serveurBanque.getBanque();
         ConnexionBanque cnx;
-        String msg, typeEvenement, argument, numCompteClient, nip;
-        String[] t;
+        String msg, typeEvenement, numCompteClient, nip;
+        String argument = evenement.getArgument();
+        String[] t = argument.split(":");;
 
         if (source instanceof Connexion) {
             cnx = (ConnexionBanque) source;
@@ -130,7 +127,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                 case "EPARGNE":
                     //verifier si compte deja connecter
                     if (cnx.getNumeroCompteClient() != null) {
-                        cnx.envoyer("EPARGNE NO");
+                        cnx.envoyer("EPARGNE NO non connecte");
                         break;
                     }
 
@@ -138,7 +135,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
 
                     //Verifier si client possede compte Epargne
                     if(banque.clientPossedeCompteEpargne(cnx.getNumeroCompteClient())) {
-                        cnx.envoyer("EPARGNE NO");
+                        cnx.envoyer("EPARGNE NO compte epargne existe deja");
                     }
 
                     //genere numero de compte Epargne
@@ -154,9 +151,8 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             TypeCompte.EPARGNE,
                             5.0
                     );
-                    nouveauCompte.setNumeroCompte(nouveauNumeroCompte);
 
-                    banque.ajouterCompte(cnx.getNumeroCompteClient(), nouveauCompte);
+                    banque.ajouter(cnx.getNumeroCompteClient(), nouveauCompte);
 
                     cnx.envoyer("EPARGNE OK " + nouveauNumeroCompte);
                     break;
@@ -189,69 +185,120 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     //6.1 - CASE DEPOT
 
                 case "DEPOT":
-                    if(t.length == 2) {
-                        try {
-                            double montant = Double.parseDouble(t[1]);
-                            crediterCompte(montant);
-                            System.out.println("Votre compte à été crédité de " + montant + " unités.");
-                        } catch (NumberFormatException e) {
-                            System.out.println("Montant invalide: " + t[1]);
+                    if (cnx.getNumeroCompteClient() == null) {
+                        cnx.envoyer("DEPOT NO non connecte");
+                        break;
+                    }
+                    if (t.length != 2) {
+                        cnx.envoyer("DEPOT NO format incorrect");
+                        break;
+                    }
+                    try {
+                        double montant = Double.parseDouble(t[1]);
+                        CompteBancaire compte = banque.getCompte(cnx.getNumeroCompteActuel());
+                        if (compte != null) {
+                            compte.crediter(montant);
+                            cnx.envoyer("DEPOT OK " + montant);
+                        } else {
+                            cnx.envoyer("DEPOT NO compte inexistant");
                         }
-                    } else {
-                        System.out.println("Format de commande incorrecte: Utilisation: DEPOT montant.");
+                    } catch (NumberFormatException e) {
+                        cnx.envoyer("DEPOT NO montant invalide");
                     }
                     break;
 
                     // 6.2 - RETRAIT
 
                 case "RETRAIT":
-                    if(t.length == 2) {
-                        try {
-                            double montant = Double.parseDouble(t[1]);
-                            debiterCompte(montant);
-                            System.out.println("Votre compte à été débité de " + montant + " unités.");
-                        } catch (NumberFormatException e) {
-                            System.out.println("Montant invalide: " + t[1]);
+                    if (cnx.getNumeroCompteClient() == null) {
+                        cnx.envoyer("RETRAIT NO non connecte");
+                        break;
+                    }
+                    if (t.length != 2) {
+                        cnx.envoyer("RETRAIT NO format incorrect");
+                        break;
+                    }
+                    try {
+                        double montant = Double.parseDouble(t[1]);
+                        CompteBancaire compte = banque.getCompte(cnx.getNumeroCompteActuel());
+                        if (compte != null) {
+                            if (compte.debiter(montant)) {
+                                cnx.envoyer("RETRAIT OK " + montant);
+                            } else {
+                                cnx.envoyer("RETRAIT NO solde insuffisant");
+                            }
+                        } else {
+                            cnx.envoyer("RETRAIT NO compte inexistant");
                         }
-                    } else {
-                        System.out.println("Format de commande incorrecte: Utilisation: RETRAIT montant.");
+                    } catch (NumberFormatException e) {
+                        cnx.envoyer("RETRAIT NO montant invalide");
                     }
                     break;
 
                     //6.3 - FACTURE
 
                 case "FACTURE":
-                    if(t.length == 4) {
-                        try {
-                            double montant = Double.parseDouble(t[1]);
-                            String numFacture = t[2];
-                            String description = t[3];
-                            //Appel de la méthode payerFacture
-                            payerFacture();
-                            System.out.println("Votre facture " + numFacture + " a été payée de " + montant + " unités.");
-                        } catch (NumberFormatException e) {
-                            System.out.println("Montant invalide: " + t[1]);
+                    if (cnx.getNumeroCompteClient() == null) {
+                        cnx.envoyer("FACTURE NO non connecte");
+                        break;
+                    }
+                    if (t.length != 4) {
+                        cnx.envoyer("FACTURE NO format incorrect");
+                        break;
+                    }
+                    try {
+                        double montant = Double.parseDouble(t[1]);
+                        String numFacture = t[2];
+                        String description = t[3];
+                        CompteBancaire compte = banque.getCompte(cnx.getNumeroCompteActuel());
+                        if (compte != null) {
+                            if (compte.debiter(montant)) {
+                                cnx.envoyer("FACTURE OK " + montant + " " + numFacture);
+                            } else {
+                                cnx.envoyer("FACTURE NO solde insuffisant");
+                            }
+                        } else {
+                            cnx.envoyer("FACTURE NO compte inexistant");
                         }
-                    } else {
-                        System.out.println("Format de commande incorrecte. Utilisation: FACTURE montant  numéro de facture description.");
+                    } catch (NumberFormatException e) {
+                        cnx.envoyer("FACTURE NO montant invalide");
                     }
                     break;
 
                     // 6.4 - TRANSFER
 
                 case "TRANSFER":
-                    if(t.length == 3){
-                        try {
-                            double montant = Double.parseDouble(t[1]);
-                            String numCompteDestinataire = t[2];
-                            //Appel de la méthode pour transférer l'argent
-                            transfererArgent();
-                            System.out.println("Votre transfert de " + montant + " unités vers le compte " + numCompteDestinataire + " a été effectué.");
-                        } catch (NumberFormatException e) {
-                            System.out.println("Montant invalide: " + t[1]);
+                    if (cnx.getNumeroCompteClient() == null) {
+                        cnx.envoyer("TRANSFER NO non connecte");
+                        break;
+                    }
+                    if (t.length != 3) {
+                        cnx.envoyer("TRANSFER NO format incorrect");
+                        break;
+                    }
+                    try {
+                        double montant = Double.parseDouble(t[1]);
+                        String compteDestinataire = t[2];
+                        CompteBancaire compteSource = banque.getCompte(cnx.getNumeroCompteActuel());
+                        CompteBancaire compteDest = banque.getCompte(compteDestinataire);
+
+                        if (compteSource == null) {
+                            cnx.envoyer("TRANSFER NO compte source inexistant");
+                            break;
                         }
-                    } else {
-                        System.out.println(" Format de commande incorrecte. Utilisation : TRANSFER montant numéro-compte");
+                        if (compteDest == null) {
+                            cnx.envoyer("TRANSFER NO compte destinataire inexistant");
+                            break;
+                        }
+
+                        if (compteSource.debiter(montant)) {
+                            compteDest.crediter(montant);
+                            cnx.envoyer("TRANSFER OK " + montant + " " + compteDestinataire);
+                        } else {
+                            cnx.envoyer("TRANSFER NO solde insuffisant");
+                        }
+                    } catch (NumberFormatException e) {
+                        cnx.envoyer("TRANSFER NO montant invalide");
                     }
                     break;
                 /******************* TRAITEMENT PAR DÉFAUT *******************/

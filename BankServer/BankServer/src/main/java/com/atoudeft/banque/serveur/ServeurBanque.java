@@ -16,7 +16,7 @@ import java.util.ListIterator;
  * @since 2024-08-20
  */
 public class ServeurBanque extends Serveur {
-    public static final int DELAI_INACTIVITE = 5000/*30000*/;
+    public static final int DELAI_INACTIVITE = 30000/*30000*/;
     //Référence vers la banque gérée par ce serveur :
     private Banque banque;
     //Thread qui supprime les connexions inactives :
@@ -102,4 +102,9 @@ public class ServeurBanque extends Serveur {
             }
         }
     }
+    public boolean estCompteConnecte(String numCompteClient) {
+        // Logique pour vérifier si un compte est déjà connecté.
+        return connectes.contains(numCompteClient);
+    }
+
 }

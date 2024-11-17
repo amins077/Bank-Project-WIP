@@ -84,7 +84,7 @@ public class Banque implements Serializable {
      */
     public boolean payerFacture(double montant, String numeroCompte, String numeroFacture, String description) {
     //    throw new NotImplementedException();
-
+    return false;
     }
 
     /**
@@ -94,6 +94,8 @@ public class Banque implements Serializable {
      * @param nip nip du compte-client à créer
      * @return true si le compte a été créé correctement
      */
+
+
 
     public boolean ajouter(String numCompteClient, String nip) {
         /*À compléter et modifier :
@@ -129,16 +131,63 @@ public class Banque implements Serializable {
         //creation nouveau compte client
         CompteClient compteClient = new CompteClient(numCompteClient, nip);
 
-        //Generation numero compte bancaire
-        String numCompteBancaire = CompteBancaire.genereNouveauNumero();
-        while (compteBancaireExiste(numCompteBancaire)) {
-            numCompteBancaire = CompteBancaire.genereNouveauNumero();
+        // Génération numéro compte bancaire unique
+        final String numCompteBancaire = CompteBancaire.genereNouveauNumero();
+        if (compteBancaireExiste(numCompteBancaire)) {
+            return false;  // Si le numéro existe déjà, on abandonne la création
         }
 
-        //creation compte cheque au client client
-        CompteBancaire compteCheque = new CompteBancaire(numCompteBancaire);
+        CompteBancaire compteCheque = new CompteBancaire(numCompteBancaire, TypeCompte.CHEQUE) {
+            private double solde = 0.0;
+
+            @Override
+            public boolean crediter(double montant) {
+                if (montant > 0) {
+                    solde += montant;
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean debiter(double montant) {
+                if (montant > 0 && montant <= solde) {
+                    solde -= montant;
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public double getSolde() {
+                return solde;
+            }
+
+            @Override
+            public String getNumero() {
+                return numCompteBancaire;
+            }
+
+            @Override
+            public boolean payerFacture(String description, double montant, String numeroFacture) {
+                return debiter(montant);
+            }
+
+            @Override
+            public boolean transferer(double montant, String numeroCompteDestination) {
+                if (debiter(montant)) {
+                    // Note: In a real implementation, we'd need to handle the crediting of the destination account
+                    // through the bank's transferer method
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        // Ajouter le compte chèque au compte client
         compteClient.ajouter(compteCheque);
 
+        // Ajouter le compte client à la liste des comptes
         comptes.add(compteClient);
 
         return true;
@@ -154,5 +203,96 @@ public class Banque implements Serializable {
     public String getNumeroCompteParDefaut(String numCompteClient) {
         //À compléter : retourner le numéro du compte-chèque du compte-client.
         return null; //À modifier
+    }
+
+    public boolean compteBancaireExiste(String numeroCompteBancaire) {
+        for (CompteClient compteClient : comptes) {
+            for (CompteBancaire compteBancaire : compteClient.getComptes()) {
+                if (compteBancaire.getNumero().equals(numeroCompteBancaire)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    /**
+     * Vérifie si le NIP correspond au compte client donné
+     */
+    public boolean verifierNip(String numeroCompteClient, String nip) {
+        CompteClient client = getCompteClient(numeroCompteClient);
+        if (client != null) {
+            return client.verifierNip(nip);
+        }
+        return false;
+    }
+
+    /**
+     * Vérifie si le client possède déjà un compte épargne
+     */
+    public boolean clientPossedeCompteEpargne(String numeroCompteClient) {
+        CompteClient client = getCompteClient(numeroCompteClient);
+        if (client != null) {
+            for (CompteBancaire compte : client.getComptes()) {
+                if (compte instanceof CompteEpargne) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Vérifie si un numéro de compte existe déjà
+     */
+    public boolean numeroCompteExistant(String numeroCompte) {
+        for (CompteClient client : comptes) {
+            for (CompteBancaire compte : client.getComptes()) {
+                if (compte.getNumero().equals(numeroCompte)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Ajoute un compte bancaire à un client existant
+     */
+    public boolean ajouter(String numeroCompteClient, CompteBancaire compte) {
+        CompteClient client = getCompteClient(numeroCompteClient);
+        if (client != null) {
+            return client.ajouter(compte);
+        }
+        return false;
+    }
+
+    /**
+     * Retourne le numéro du compte épargne d'un client
+     */
+    public String getNumeroCompteEpargne(String numeroCompteClient) {
+        CompteClient client = getCompteClient(numeroCompteClient);
+        if (client != null) {
+            for (CompteBancaire compte : client.getComptes()) {
+                if (compte instanceof CompteEpargne) {
+                    return compte.getNumero();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Crédite un montant sur un compte
+     */
+
+    public CompteBancaire getCompte(String numeroCompte) {
+        for (CompteClient client : comptes) {
+            for (CompteBancaire compte : client.getComptes()) {
+                if (compte.getNumero().equals(numeroCompte)) {
+                    return compte;
+                }
+            }
+        }
+        return null; // Compte not found
     }
 }
