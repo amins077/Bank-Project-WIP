@@ -41,7 +41,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
         ConnexionBanque cnx;
         String msg, typeEvenement, numCompteClient, nip;
         String argument = evenement.getArgument();
-        String[] t = argument.split(":");;
+        String[] t = new String[0];
 
         if (source instanceof Connexion) {
             cnx = (ConnexionBanque) source;
@@ -189,12 +189,19 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         cnx.envoyer("DEPOT NO non connecte");
                         break;
                     }
-                    if (t.length != 2) {
+
+                    String depotArg = evenement.getArgument();
+                    if (depotArg == null || depotArg.trim().isEmpty()) {
                         cnx.envoyer("DEPOT NO format incorrect");
                         break;
                     }
+
                     try {
                         double montant = Double.parseDouble(t[1]);
+                        if (montant <= 0) {
+                            cnx.envoyer("DEPOT NO montant invalide");
+                            break;
+                        }
                         CompteBancaire compte = banque.getCompte(cnx.getNumeroCompteActuel());
                         if (compte != null) {
                             compte.crediter(montant);
