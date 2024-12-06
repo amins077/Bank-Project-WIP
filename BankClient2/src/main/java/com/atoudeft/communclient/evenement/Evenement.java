@@ -1,4 +1,4 @@
-package com.atoudeft.commun.evenement;
+package com.atoudeft.communclient.evenement;
 /**
  * Cette classe représente un événement. Un événement possède une source (Object), est caractérisé par son type (String)
  * et peut avoir des arguments regroupés dans une chaine de caractères (String).

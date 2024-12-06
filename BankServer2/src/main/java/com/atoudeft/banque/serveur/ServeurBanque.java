@@ -2,10 +2,9 @@ package com.atoudeft.banque.serveur;
 
 import com.atoudeft.banque.Banque;
 import com.atoudeft.banque.io.EntreesSorties;
-import com.atoudeft.commun.net.Connexion;
+import com.atoudeft.communclient.net.Connexion;
 import com.atoudeft.serveur.Serveur;
 
-import java.util.ListIterator;
 /**
  * Cette classe étend (hérite) la classe Serveur et y ajoute le nécessaire pour que le
  * serveur soit un serveur de banque.

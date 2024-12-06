@@ -1,4 +1,4 @@
-package com.atoudeft.commun.thread;
+package com.atoudeft.communclient.thread;
 
 /**
  * Cette interface représente un objet qui fournit une méthode de lecture, typiquement un client ou un serveur.

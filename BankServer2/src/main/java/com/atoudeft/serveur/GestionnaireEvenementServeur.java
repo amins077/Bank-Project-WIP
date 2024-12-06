@@ -6,12 +6,11 @@ import com.atoudeft.banque.CompteClient;
 import com.atoudeft.banque.TypeCompte;
 import com.atoudeft.banque.serveur.ConnexionBanque;
 import com.atoudeft.banque.serveur.ServeurBanque;
-import com.atoudeft.commun.evenement.Evenement;
-import com.atoudeft.commun.evenement.GestionnaireEvenement;
-import com.atoudeft.commun.net.Connexion;
+import com.atoudeft.communclient.evenement.Evenement;
+import com.atoudeft.communclient.evenement.GestionnaireEvenement;
+import com.atoudeft.communclient.net.Connexion;
 
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * Cette classe représente un gestionnaire d'événement d'un serveur. Lorsqu'un serveur reçoit un texte d'un client,

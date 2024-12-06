@@ -1,4 +1,4 @@
-package com.atoudeft.commun.net;
+package com.atoudeft.communclient.net;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

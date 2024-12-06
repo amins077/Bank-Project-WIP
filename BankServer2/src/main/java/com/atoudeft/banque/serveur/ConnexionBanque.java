@@ -1,8 +1,6 @@
 package com.atoudeft.banque.serveur;
 
-import com.atoudeft.banque.CompteBancaire;
-import com.atoudeft.commun.net.Connexion;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.atoudeft.communclient.net.Connexion;
 
 import java.net.Socket;
 

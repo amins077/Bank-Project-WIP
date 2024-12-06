@@ -1,4 +1,4 @@
-package com.atoudeft.commun.evenement;
+package com.atoudeft.communclient.evenement;
 
 /**
  * Cette interface représente un gestionnaire d'événement.

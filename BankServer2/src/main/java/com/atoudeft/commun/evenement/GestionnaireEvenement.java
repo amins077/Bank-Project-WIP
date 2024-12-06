@@ -1,5 +1,7 @@
 package com.atoudeft.commun.evenement;
 
+import com.atoudeft.communclient.evenement.Evenement;
+
 /**
  * Cette interface représente un gestionnaire d'événement.
  *

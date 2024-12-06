@@ -3,12 +3,12 @@ package com.atoudeft.serveur;
 import java.util.*;
 
 import com.atoudeft.banque.serveur.ConnexionBanque;
-import com.atoudeft.commun.net.Connexion;
-import com.atoudeft.commun.thread.Lecteur;
-import com.atoudeft.commun.thread.ThreadEcouteurDeTexte;
-import com.atoudeft.commun.evenement.Evenement;
-import com.atoudeft.commun.evenement.EvenementUtil;
-import com.atoudeft.commun.evenement.GestionnaireEvenement;
+import com.atoudeft.communclient.net.Connexion;
+import com.atoudeft.communclient.thread.Lecteur;
+import com.atoudeft.communclient.thread.ThreadEcouteurDeTexte;
+import com.atoudeft.communclient.evenement.Evenement;
+import com.atoudeft.communclient.evenement.EvenementUtil;
+import com.atoudeft.communclient.evenement.GestionnaireEvenement;
 
 import java.net.ServerSocket;
 import java.net.Socket;

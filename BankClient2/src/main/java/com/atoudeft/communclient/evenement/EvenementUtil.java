@@ -1,4 +1,4 @@
-package com.atoudeft.commun.evenement;
+package com.atoudeft.communclient.evenement;
 
 /**
  * Classe utilitaire fournissant des méthodes pour manipuler des événements.

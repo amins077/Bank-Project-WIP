@@ -1,4 +1,7 @@
 package com.atoudeft.commun.thread;
+
+import com.atoudeft.communclient.thread.Lecteur;
+
 /**
  * Cette classe permet de créer des threads capables de lire continuellement sur un un objet de type Lecteur.
  *
@@ -11,7 +14,7 @@ public class ThreadEcouteurDeTexte extends Thread {
 	 * Délai de sleep dans la boucle de lecture.
 	 */
 	public static int DELAI_SLEEP = 100;
-	private Lecteur lecteur;
+	private com.atoudeft.communclient.thread.Lecteur lecteur;
 
 	/**
 	 * Construit un thread sur un lecteur

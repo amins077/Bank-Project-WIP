@@ -2,7 +2,7 @@ package com.programmes;
 
 import com.atoudeft.client.Client;
 import com.atoudeft.client.GestionnaireEvenementClient2;
-import com.atoudeft.commun.evenement.GestionnaireEvenement;
+import com.atoudeft.communclient.evenement.GestionnaireEvenement;
 import com.atoudeft.controleur.EcouteurMenuPrincipal;
 import com.atoudeft.observer.Observable;
 import com.atoudeft.observer.Observateur;
@@ -11,7 +11,6 @@ import com.atoudeft.vue.PanneauPrincipal;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Vector;
 
 /**
  *
@@ -93,11 +92,16 @@ public class MainFrame extends JFrame implements Runnable, Observateur {
     public void seMettreAJour(Observable observable) {
         if (observable instanceof Client) {
             Client client = (Client)observable;
-            if (!client.isConnecte()) {
+            if (client.isConnecte()) {
+                miDeconnecter.setEnabled(true);
+                miConnecter.setEnabled(false);
+            } else {
                 this.setTitle(TITRE);
                 this.panneauPrincipal.setVisible(false);
                 panneauPrincipal.cacherPanneauCompteClient();
                 panneauPrincipal.montrerPanneauConnexion();
+                miDeconnecter.setEnabled(false);
+                miConnecter.setEnabled(true);
             }
         }
     }

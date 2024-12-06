@@ -1,4 +1,4 @@
-package com.atoudeft.commun.thread;
+package com.atoudeft.communclient.thread;
 /**
  * Cette classe permet de créer des threads capables de lire continuellement sur un un objet de type Lecteur.
  *
