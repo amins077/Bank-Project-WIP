@@ -9,7 +9,7 @@ import java.awt.*;
  * @version 1.0
  * @since 2023-11-01
  */
-public class PanneauConfigServeur extends JPanel{
+public class PanneauConfigServeur extends JPanel {
     private JTextField txtAdrServeur, txtNumPort;
 
     public PanneauConfigServeur(String adr, int port) {
