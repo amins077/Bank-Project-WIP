@@ -12,7 +12,7 @@ import java.util.Scanner;
  * @version 1.0
  * @since 2023-09-01
  */
-public class ProgrammeClientTP1 {
+public class ProgrammeClientTP2 {
 
 	/**
 	 * Méthode principale du programme.
