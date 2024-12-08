@@ -30,10 +30,6 @@ public class PanneauConnexion extends JPanel {
 
         p1.add(txtNumCompteClient);
         p2.add(txtNip);
-//
-//        p2.add(lNip);
-//        p2.add(txtNip);
-
         p3.add(bNouveau);
         p3.add(bConnecter);
 

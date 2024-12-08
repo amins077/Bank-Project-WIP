@@ -90,5 +90,6 @@ public class PanneauPrincipal  extends JPanel {
      *
      * @param str chaine contenant le numéros de compte
      */
-    public void ajouterCompte(String str) { numerosComptes.addElement(str); }
+    public void ajouterCompte(String str) {
+        numerosComptes.addElement(str); }
 }

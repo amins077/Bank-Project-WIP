@@ -6,6 +6,7 @@ import com.atoudeft.communclient.evenement.GestionnaireEvenement;
 import com.atoudeft.controleur.EcouteurMenuPrincipal;
 import com.atoudeft.observer.Observable;
 import com.atoudeft.observer.Observateur;
+import com.atoudeft.vue.PanneauConfigServeur;
 import com.atoudeft.vue.PanneauPrincipal;
 
 
